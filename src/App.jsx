@@ -1,14 +1,17 @@
+import { useState } from 'react';
 import { MdDonutLarge, MdChat, MdMoreVert, MdSearch } from 'react-icons/md';
 
 import ChatListItem from './components/ChatListItem';
 import ChatIntro from './components/ChatIntro';
+import ChatWindow from './components/ChatWindow';
 
 import avatarHref from './assets/imgs/user-avatar.png';
 import './App.css';
-import { useState } from 'react';
 
 function App() {
   const [chatList, setChatList] = useState([{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}]);
+  const [activeChat, setActiveChat] = useState({});
+
   return (
     <div className="app-window">
       <div className="sidebar">
@@ -49,7 +52,7 @@ function App() {
       </div>
 
       <div className="contentarea">
-        <ChatIntro />
+        {activeChat.chatId ? <ChatWindow /> : <ChatIntro />}
       </div>
     </div>
   );
