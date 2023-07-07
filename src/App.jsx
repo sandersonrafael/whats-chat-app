@@ -9,7 +9,12 @@ import avatarHref from './assets/imgs/user-avatar.png';
 import './App.css';
 
 function App() {
-  const [chatList, setChatList] = useState([{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}]);
+  const [chatList, setChatList] = useState([
+    { chatId: 1, title: 'Jurandir Ferreira', image: 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'},
+    { chatId: 2, title: 'Marcielle Lacena', image: 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'},
+    { chatId: 3, title: 'Pedro Amorim', image: 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'},
+    { chatId: 4, title: 'André Ricardo Carvalho', image: 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'},
+  ]);
   const [activeChat, setActiveChat] = useState({});
 
   return (
@@ -46,7 +51,12 @@ function App() {
 
         <div className="chatlist">
           {chatList.map((item, key) => (
-            <ChatListItem key={key}/>
+            <ChatListItem
+              key={key}
+              data={item}
+              active={activeChat.chatId === item.chatId}
+              onClick={() => setActiveChat(chatList[key])}
+            />
           ))}
         </div>
       </div>

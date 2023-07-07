@@ -16,6 +16,7 @@
     "semi": ["error", "always"],
     "comma-dangle": ["error", "always-multiline"],
     "jsx-quotes": ["error", "prefer-double"],
-    "react/react-in-jsx-scope": "off"
+    "react/react-in-jsx-scope": "off",
+    "eol-last": "error"
   }
 }
