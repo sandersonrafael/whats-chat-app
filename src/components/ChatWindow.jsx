@@ -1,4 +1,4 @@
-import EmojiPicker from 'emoji-picker-react';
+import { useState } from 'react';
 import {
   MdSearch,
   MdAttachFile,
@@ -9,13 +9,12 @@ import {
   MdMic,
 } from 'react-icons/md';
 
+import EmojiPickerMemo from '../components/EmojiPickerMemo';
 import './ChatWindow.css';
-import { useState } from 'react';
 
 export default function ChatWindow() {
   const [emojiView, setEmojiView] = useState(false);
-
-  const handleEmojiClick = () => {};
+  const [text, setText] = useState('');
 
   return (
     <div className="chatwindow">
@@ -47,13 +46,7 @@ export default function ChatWindow() {
       <div className="chatwindow--body"></div>
 
       <div className="chatwindow--emojiarea">
-        <EmojiPicker
-          onEmojiClick={handleEmojiClick}
-          searchDisabled
-          skinTonesDisabled
-          previewConfig={{showPreview: false}}
-          height={emojiView ? 250 : 0}
-        />
+        <EmojiPickerMemo emojiView={emojiView} setText={setText} />
       </div>
 
       <div className="chatwindow--footer">
@@ -79,13 +72,20 @@ export default function ChatWindow() {
             type="text"
             className="chatwindow--input"
             placeholder="Digite sua mensagem..."
+            value={text}
+            onChange={(e) => setText(e.target.value)}
           />
         </div>
 
         <div className="chatwindow--pos">
           <div className="chatwindow--btn">
-            <MdSend style={{ color: '#919191', fontSize: 26 }} />
+            {text ? 
+              <MdSend style={{ color: '#919191', fontSize: 26 }} /> :
+              <MdMic style={{ color: '#919191', fontSize: 26 }} /> 
+            }
           </div>
+
+
         </div>
       </div>
     </div>

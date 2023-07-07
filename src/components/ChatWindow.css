@@ -87,29 +87,5 @@
 
 .chatwindow--pos {
   display: flex;
-}
-
-.EmojiPickerReact {
-  background-color: transparent !important;
-  width: auto !important;
-  border-radius: 0 !important;
-  transition: all 0.3s ease !important;
-}
-
-.EmojiPickerReact .epr-emoji-category-label {
-  background-color: transparent !important;
-  position: static !important;
-}
-
-.EmojiPickerReact .epr-body::-webkit-scrollbar {
-  width: 6px !important;
-  height: 6px !important;
-}
-
-.EmojiPickerReact .epr-body::-webkit-scrollbar-thumb {
-  background-color: transparent !important;
-}
-
-.EmojiPickerReact:hover .epr-body::-webkit-scrollbar-thumb {
-  background-color: rgba(0, 0, 0, 0.2) !important;
+  margin: 0 10px;
 }
