@@ -16,6 +16,9 @@ function App() {
     { chatId: 4, title: 'André Ricardo Carvalho', image: 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'},
   ]);
   const [activeChat, setActiveChat] = useState({});
+  const [user, setUser] = useState({
+    id: 1234,
+  });
 
   return (
     <div className="app-window">
@@ -62,7 +65,7 @@ function App() {
       </div>
 
       <div className="contentarea">
-        {activeChat.chatId ? <ChatWindow /> : <ChatIntro />}
+        {activeChat.chatId ? <ChatWindow user={user} /> : <ChatIntro />}
       </div>
     </div>
   );

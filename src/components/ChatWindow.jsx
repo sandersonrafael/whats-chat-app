@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import PropTypes from 'prop-types';
 import {
   MdSearch,
   MdAttachFile,
@@ -10,9 +11,10 @@ import {
 } from 'react-icons/md';
 
 import EmojiPickerMemo from '../components/EmojiPickerMemo';
+import MessageItem from './MessageItem';
 import './ChatWindow.css';
 
-export default function ChatWindow() {
+export default function ChatWindow({ user }) {
   let recognition = null;
   let SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
   if (SpeechRecognition) recognition = new SpeechRecognition;
@@ -20,7 +22,11 @@ export default function ChatWindow() {
   const [emojiView, setEmojiView] = useState(false);
   const [text, setText] = useState('');
   const [listening, setListening] = useState(false);
-  const [msgList, setMsgList] = useState([]);
+  const [msgList, setMsgList] = useState([
+    {author: 11, body: 'bla bla bla bla', date: '19:00'},
+    {author: 11, body: 'ble ble ble ble ble ble ble ble', date: '19:15'},
+    {author: 1234, body: 'bli bli bli', date: '19:17'},
+  ]);
 
   const handleSendClick = () => {
 
@@ -73,7 +79,11 @@ export default function ChatWindow() {
         </div>
       </div>
 
-      <div className="chatwindow--body"></div>
+      <div className="chatwindow--body">
+        {msgList.map((item, key) => (
+          <MessageItem data={item} key={key} />
+        ))}
+      </div>
 
       <div className="chatwindow--emojiarea">
         <EmojiPickerMemo emojiView={emojiView} setText={setText} />
@@ -121,3 +131,7 @@ export default function ChatWindow() {
     </div>
   );
 }
+
+ChatWindow.propTypes = {
+  user: PropTypes.number.isRequired,
+};
