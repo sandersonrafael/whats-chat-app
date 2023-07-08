@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import {
   MdSearch,
@@ -19,6 +19,7 @@ export default function ChatWindow({ user }) {
   let SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
   if (SpeechRecognition) recognition = new SpeechRecognition;
 
+  const messageBody = useRef(null);
   const [emojiView, setEmojiView] = useState(false);
   const [text, setText] = useState('');
   const [listening, setListening] = useState(false);
@@ -26,7 +27,36 @@ export default function ChatWindow({ user }) {
     {author: 11, body: 'bla bla bla bla', date: '19:00'},
     {author: 11, body: 'ble ble ble ble ble ble ble ble', date: '19:15'},
     {author: 1234, body: 'bli bli bli', date: '19:17'},
+    {author: 11, body: 'bla bla bla bla', date: '19:00'},
+    {author: 11, body: 'ble ble ble ble ble ble ble ble', date: '19:15'},
+    {author: 1234, body: 'bli bli bli', date: '19:17'},
+    {author: 11, body: 'bla bla bla bla', date: '19:00'},
+    {author: 11, body: 'ble ble ble ble ble ble ble ble', date: '19:15'},
+    {author: 1234, body: 'bli bli bli', date: '19:17'},
+    {author: 11, body: 'bla bla bla bla', date: '19:00'},
+    {author: 11, body: 'ble ble ble ble ble ble ble ble', date: '19:15'},
+    {author: 1234, body: 'bli bli bli', date: '19:17'},
+    {author: 11, body: 'bla bla bla bla', date: '19:00'},
+    {author: 11, body: 'ble ble ble ble ble ble ble ble', date: '19:15'},
+    {author: 1234, body: 'bli bli bli', date: '19:17'},
+    {author: 11, body: 'bla bla bla bla', date: '19:00'},
+    {author: 11, body: 'ble ble ble ble ble ble ble ble', date: '19:15'},
+    {author: 1234, body: 'bli bli bli', date: '19:17'},
+    {author: 11, body: 'bla bla bla bla', date: '19:00'},
+    {author: 11, body: 'ble ble ble ble ble ble ble ble', date: '19:15'},
+    {author: 1234, body: 'bli bli bli', date: '19:17'},
+    {author: 11, body: 'bla bla bla bla', date: '19:00'},
+    {author: 11, body: 'ble ble ble ble ble ble ble ble', date: '19:15'},
+    {author: 1234, body: 'bli bli bli', date: '19:17'},
   ]);
+
+  useEffect(() => {
+    if (messageBody.current.scrollHeight > messageBody.current.offsetHeight) {
+      messageBody.current.scrollTop = (
+        messageBody.current.scrollHeight - messageBody.current.offsetHeight
+      );
+    }
+  }, [msgList]);
 
   const handleSendClick = () => {
 
@@ -79,9 +109,9 @@ export default function ChatWindow({ user }) {
         </div>
       </div>
 
-      <div className="chatwindow--body">
+      <div className="chatwindow--body" ref={messageBody}>
         {msgList.map((item, key) => (
-          <MessageItem data={item} key={key} />
+          <MessageItem data={item} key={key} user={user} />
         ))}
       </div>
 
@@ -133,5 +163,5 @@ export default function ChatWindow({ user }) {
 }
 
 ChatWindow.propTypes = {
-  user: PropTypes.number.isRequired,
+  user: PropTypes.shape({}).isRequired,
 };

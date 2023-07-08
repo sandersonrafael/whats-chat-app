@@ -52,6 +52,7 @@ body {
 
 .header--btn > svg {
   color: #919191;
+  font-size: 22px;
 }
 
 .search {

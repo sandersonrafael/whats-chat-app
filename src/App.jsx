@@ -4,8 +4,8 @@ import { MdDonutLarge, MdChat, MdMoreVert, MdSearch } from 'react-icons/md';
 import ChatListItem from './components/ChatListItem';
 import ChatIntro from './components/ChatIntro';
 import ChatWindow from './components/ChatWindow';
+import NewChat from './components/NewChat';
 
-import avatarHref from './assets/imgs/user-avatar.png';
 import './App.css';
 
 function App() {
@@ -18,15 +18,28 @@ function App() {
   const [activeChat, setActiveChat] = useState({});
   const [user, setUser] = useState({
     id: 1234,
+    avatar: 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
+    name: 'Fulano de Tal',
   });
+  const [showNewChat, setShowNewChat] = useState(false);
+
+  const handleNewChat = () => {
+    setShowNewChat(true);
+  };
 
   return (
     <div className="app-window">
       <div className="sidebar">
+        <NewChat
+          chatList={chatList}
+          user={user}
+          show={showNewChat}
+          setShow={setShowNewChat}
+        />
         <header>
           <img
             className="header--avatar"
-            src={avatarHref}
+            src={user.avatar}
             alt="Imagem do usuário"
           />
           <div className="header--buttons">
@@ -34,7 +47,7 @@ function App() {
               <MdDonutLarge />
             </div>
             <div className="header--btn">
-              <MdChat />
+              <MdChat onClick={handleNewChat} />
             </div>
             <div className="header--btn">
               <MdMoreVert />
@@ -47,7 +60,7 @@ function App() {
             <MdSearch />
             <input
               type="search"
-              placeholder="Procurar ou começar uma nova conversa"
+              placeholder="Procure uma conversa"
             />
           </div>
         </div>

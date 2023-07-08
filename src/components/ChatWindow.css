@@ -58,6 +58,19 @@
   padding: 20px 30px;
 }
 
+.chatwindow--body::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.chatwindow--body::-webkit-scrollbar-thumb {
+  background-color: transparent;
+}
+
+.chatwindow--body:hover::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
 .chatwindow--footer {
   height: 62px;
   display: flex;
