@@ -5,27 +5,35 @@ import ChatListItem from './components/ChatListItem';
 import ChatIntro from './components/ChatIntro';
 import ChatWindow from './components/ChatWindow';
 import NewChat from './components/NewChat';
+import Login from './components/Login';
+import Api from './Api';
 
 import './App.css';
 
 function App() {
-  const [chatList, setChatList] = useState([
-    { chatId: 1, title: 'Jurandir Ferreira', image: 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'},
-    { chatId: 2, title: 'Marcielle Lacena', image: 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'},
-    { chatId: 3, title: 'Pedro Amorim', image: 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'},
-    { chatId: 4, title: 'André Ricardo Carvalho', image: 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'},
-  ]);
+  const [chatList, setChatList] = useState([]);
   const [activeChat, setActiveChat] = useState({});
-  const [user, setUser] = useState({
-    id: 1234,
-    avatar: 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
-    name: 'Fulano de Tal',
-  });
+  const [user, setUser] = useState(null);
   const [showNewChat, setShowNewChat] = useState(false);
 
   const handleNewChat = () => {
     setShowNewChat(true);
   };
+
+  const handleLoginData = async (u) => {
+    const newUser = {
+      id: u.uid,
+      name: u.displayName,
+      avatar: u.photoURL,
+    };
+
+    // leva o usuário para a base de dados;
+    await Api.addUser(newUser);
+
+    setUser(newUser);
+  };
+
+  if (!user) return <Login onReceive={handleLoginData} />;
 
   return (
     <div className="app-window">

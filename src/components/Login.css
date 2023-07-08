@@ -1,0 +1,31 @@
+.login {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: calc(100vh - 16px);
+}
+
+.login > button {
+  padding: 20px;
+  border-radius: 10px;
+  border: none;
+  outline: none;
+  font-size: medium;
+  background-color: #29dd77da;
+  cursor: pointer;
+  color: #ffffff;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.login > button:hover {
+  transition: all 0.3s ease;
+  opacity: .9;
+  scale: 1.03;
+}
+
+.login > button > * {
+  margin: 0 5px;
+}

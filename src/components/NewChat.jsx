@@ -45,7 +45,7 @@ NewChat.propTypes = {
     }),
   ).isRequired,
   user: PropTypes.shape({
-    id: PropTypes.number.isRequired,
+    id: PropTypes.string.isRequired,
     avatar: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
   }).isRequired,
