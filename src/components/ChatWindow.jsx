@@ -13,8 +13,38 @@ import EmojiPickerMemo from '../components/EmojiPickerMemo';
 import './ChatWindow.css';
 
 export default function ChatWindow() {
+  let recognition = null;
+  let SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (SpeechRecognition) recognition = new SpeechRecognition;
+
   const [emojiView, setEmojiView] = useState(false);
   const [text, setText] = useState('');
+  const [listening, setListening] = useState(false);
+  const [msgList, setMsgList] = useState([]);
+
+  const handleSendClick = () => {
+
+  };
+
+  const handleMicClick = () => {
+    if (recognition) {
+      recognition.lang = 'pt-BR';
+
+      recognition.onstart = () => {
+        setListening(true);
+      };
+
+      recognition.onend = () => {
+        setListening(false);
+      };
+
+      recognition.onresult = (e) => {
+        setText(e.results[0][0].transcript);
+      };
+
+      recognition.start();
+    }
+  };
 
   return (
     <div className="chatwindow">
@@ -51,12 +81,14 @@ export default function ChatWindow() {
 
       <div className="chatwindow--footer">
         <div className="chatwindow--pre">
-          {emojiView && <div className="chatwindow--btn">
-            <MdClose
-              style={{ color: '#919191', fontSize: 26 }}
-              onClick={() => setEmojiView(false)}
-            />
-          </div>}
+          {emojiView && (
+            <div className="chatwindow--btn">
+              <MdClose
+                style={{ color: '#919191', fontSize: 26 }}
+                onClick={() => setEmojiView(false)}
+              />
+            </div>
+          )}
 
           <div className="chatwindow--btn">
             <MdInsertEmoticon
@@ -64,11 +96,10 @@ export default function ChatWindow() {
               onClick={() => setEmojiView(true)}
             />
           </div>
-
         </div>
 
         <div className="chatwindow--inputarea">
-          <input 
+          <input
             type="text"
             className="chatwindow--input"
             placeholder="Digite sua mensagem..."
@@ -79,13 +110,12 @@ export default function ChatWindow() {
 
         <div className="chatwindow--pos">
           <div className="chatwindow--btn">
-            {text ? 
-              <MdSend style={{ color: '#919191', fontSize: 26 }} /> :
-              <MdMic style={{ color: '#919191', fontSize: 26 }} /> 
-            }
+            {text ? (
+              <MdSend style={{ color: '#919191', fontSize: 26 }} onClick={handleSendClick} />
+            ) : (
+              <MdMic style={{ color: listening ? '#126ece' : '#919191', fontSize: 26 }} onClick={handleMicClick} />
+            )}
           </div>
-
-
         </div>
       </div>
     </div>
