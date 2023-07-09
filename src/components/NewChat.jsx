@@ -1,19 +1,36 @@
+import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { MdArrowBack } from 'react-icons/md';
 
+import Api from '../Api';
 import './NewChat.css';
-import { useState } from 'react';
 
-export default function NewChat({chatList, user, show, setShow}) {
-  const [contactList, setContactList] = useState([
-    { id: 123, avatar: 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png', name: 'Ciclano Macedo'},
-    { id: 123, avatar: 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png', name: 'Ciclano Macedo'},
-    { id: 123, avatar: 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png', name: 'Ciclano Macedo'},
-    { id: 123, avatar: 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png', name: 'Ciclano Macedo'},
-  ]);
+export default function NewChat({chatList, user, show, setShow, setChat}) {
+  const [contactList, setContactList] = useState([]);
+
+  useEffect(() => {
+    const getList = async () => {
+      if (user !== null) {
+        const results = await Api.getContactList(user.id);
+        setContactList(results);
+      }
+    };
+    getList();
+  }, [user]);
 
   const handleShowClose = () => {
     setShow(false);
+  };
+
+  const addNewChat = async (user2) => {
+    for (let chat of chatList) {
+      if (chat.with === user2.id) {
+        setChat(chat);
+        return handleShowClose();
+      }
+    }
+    await Api.addNewChat(user, user2);
+    return handleShowClose();
   };
 
   return (
@@ -26,7 +43,7 @@ export default function NewChat({chatList, user, show, setShow}) {
       </div>
       <div className="newchat--list">
         {contactList.map((contact, index) => (
-          <div className="newchat--item" key={index}>
+          <div onClick={() => addNewChat(contact)} className="newchat--item" key={index}>
             <img className="newchat--itemavatar" src={contact.avatar} alt={contact.name} />
             <div className="newchat--itemname">{contact.name}</div>
           </div>
@@ -39,7 +56,7 @@ export default function NewChat({chatList, user, show, setShow}) {
 NewChat.propTypes = {
   chatList: PropTypes.arrayOf(
     PropTypes.shape({
-      chatId: PropTypes.number.isRequired,
+      chatId: PropTypes.string.isRequired,
       title: PropTypes.string.isRequired,
       image: PropTypes.string.isRequired,
     }),
@@ -51,4 +68,5 @@ NewChat.propTypes = {
   }).isRequired,
   show: PropTypes.bool.isRequired,
   setShow: PropTypes.func.isRequired,
+  setChat: PropTypes.func.isRequired,
 };

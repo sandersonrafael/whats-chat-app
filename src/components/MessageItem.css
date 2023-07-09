@@ -5,7 +5,7 @@
 
 .messageitem {
   background-color: #fff;
-  border-radius: 10px;
+  border-radius: 9px;
   box-shadow: 0 1px 1px #ccc;
   display: flex;
   flex-direction: column;
@@ -24,5 +24,5 @@
   color: #999;
   margin-right: 5px;
   text-align: right;
-  margin-top: -15px;
+  margin-top: -11px;
 }

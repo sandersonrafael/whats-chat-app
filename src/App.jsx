@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { MdDonutLarge, MdChat, MdMoreVert, MdSearch } from 'react-icons/md';
+import { useEffect, useState } from 'react';
+import { MdDonutLarge, MdChat, MdSearch } from 'react-icons/md';
 
 import ChatListItem from './components/ChatListItem';
 import ChatIntro from './components/ChatIntro';
@@ -9,12 +9,23 @@ import Login from './components/Login';
 import Api from './Api';
 
 import './App.css';
+import { getLoginCookieUser, setLoginCookie } from './cookies';
 
 function App() {
+  const tryCookie = getLoginCookieUser('loggedUserInfos');
+
   const [chatList, setChatList] = useState([]);
   const [activeChat, setActiveChat] = useState({});
-  const [user, setUser] = useState(null);
+
+  const [user, setUser] = useState(tryCookie);
   const [showNewChat, setShowNewChat] = useState(false);
+
+  useEffect(() => {
+    if (user !== null) {
+      const unsub = Api.onChatList(user.id, setChatList);
+      return unsub;
+    }
+  }, [user]);
 
   const handleNewChat = () => {
     setShowNewChat(true);
@@ -31,6 +42,14 @@ function App() {
     await Api.addUser(newUser);
 
     setUser(newUser);
+
+    setLoginCookie('loggedUserInfos', newUser, 1);
+  };
+
+  const handleLogout = () => {
+    setLoginCookie('loggedUserInfos', null, 0);
+    setUser(null);
+    window.location.href = '/';
   };
 
   if (!user) return <Login onReceive={handleLoginData} />;
@@ -43,6 +62,7 @@ function App() {
           user={user}
           show={showNewChat}
           setShow={setShowNewChat}
+          setChat={setActiveChat}
         />
         <header>
           <img
@@ -58,7 +78,7 @@ function App() {
               <MdChat onClick={handleNewChat} />
             </div>
             <div className="header--btn">
-              <MdMoreVert />
+              <span onClick={handleLogout}>Sair</span>
             </div>
           </div>
         </header>
@@ -66,10 +86,7 @@ function App() {
         <div className="search">
           <div className="search--input">
             <MdSearch />
-            <input
-              type="search"
-              placeholder="Procure uma conversa"
-            />
+            <input type="search" placeholder="Procure uma conversa" />
           </div>
         </div>
 
@@ -86,7 +103,15 @@ function App() {
       </div>
 
       <div className="contentarea">
-        {activeChat.chatId ? <ChatWindow user={user} /> : <ChatIntro />}
+        {activeChat.chatId ? (
+          <ChatWindow
+            user={user}
+            data={activeChat}
+            setActiveChat={setActiveChat}
+          />
+        ) : (
+          <ChatIntro />
+        )}
       </div>
     </div>
   );

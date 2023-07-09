@@ -12,9 +12,10 @@ import {
 
 import EmojiPickerMemo from '../components/EmojiPickerMemo';
 import MessageItem from './MessageItem';
+import Api from '../Api';
 import './ChatWindow.css';
 
-export default function ChatWindow({ user }) {
+export default function ChatWindow({ user, data, setActiveChat }) {
   let recognition = null;
   let SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
   if (SpeechRecognition) recognition = new SpeechRecognition;
@@ -23,32 +24,14 @@ export default function ChatWindow({ user }) {
   const [emojiView, setEmojiView] = useState(false);
   const [text, setText] = useState('');
   const [listening, setListening] = useState(false);
-  const [msgList, setMsgList] = useState([
-    {author: 11, body: 'bla bla bla bla', date: '19:00'},
-    {author: 11, body: 'ble ble ble ble ble ble ble ble', date: '19:15'},
-    {author: 1234, body: 'bli bli bli', date: '19:17'},
-    {author: 11, body: 'bla bla bla bla', date: '19:00'},
-    {author: 11, body: 'ble ble ble ble ble ble ble ble', date: '19:15'},
-    {author: 1234, body: 'bli bli bli', date: '19:17'},
-    {author: 11, body: 'bla bla bla bla', date: '19:00'},
-    {author: 11, body: 'ble ble ble ble ble ble ble ble', date: '19:15'},
-    {author: 1234, body: 'bli bli bli', date: '19:17'},
-    {author: 11, body: 'bla bla bla bla', date: '19:00'},
-    {author: 11, body: 'ble ble ble ble ble ble ble ble', date: '19:15'},
-    {author: 1234, body: 'bli bli bli', date: '19:17'},
-    {author: 11, body: 'bla bla bla bla', date: '19:00'},
-    {author: 11, body: 'ble ble ble ble ble ble ble ble', date: '19:15'},
-    {author: 1234, body: 'bli bli bli', date: '19:17'},
-    {author: 11, body: 'bla bla bla bla', date: '19:00'},
-    {author: 11, body: 'ble ble ble ble ble ble ble ble', date: '19:15'},
-    {author: 1234, body: 'bli bli bli', date: '19:17'},
-    {author: 11, body: 'bla bla bla bla', date: '19:00'},
-    {author: 11, body: 'ble ble ble ble ble ble ble ble', date: '19:15'},
-    {author: 1234, body: 'bli bli bli', date: '19:17'},
-    {author: 11, body: 'bla bla bla bla', date: '19:00'},
-    {author: 11, body: 'ble ble ble ble ble ble ble ble', date: '19:15'},
-    {author: 1234, body: 'bli bli bli', date: '19:17'},
-  ]);
+  const [msgList, setMsgList] = useState([]);
+  const [users, setUsers] = useState([]);
+
+  useEffect(() => {
+    setMsgList([]);
+    const unsub = Api.onChatContent(data.chatId, setMsgList, setUsers);
+    return unsub;
+  }, [data.chatId]);
 
   useEffect(() => {
     if (messageBody.current.scrollHeight > messageBody.current.offsetHeight) {
@@ -59,9 +42,16 @@ export default function ChatWindow({ user }) {
   }, [msgList]);
 
   const handleSendClick = () => {
-
+    if (text !== '') Api.sendMessage(data, user.id, 'text', text, users);
+    setText('');
+    setEmojiView(false);
   };
 
+  const handleInputKeyUp = (e) => {
+    if (e.keyCode === 13) handleSendClick();
+    if (e.keyCode === 27) setActiveChat({});
+  };
+  
   const handleMicClick = () => {
     if (recognition) {
       recognition.lang = 'pt-BR';
@@ -87,11 +77,11 @@ export default function ChatWindow({ user }) {
       <div className="chatwindow--header">
         <div className="chatwindow--headerinfo">
           <img
-            src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
-            alt=""
+            src={data.image}
+            alt={data.title}
             className="chatwindow--avatar"
           />
-          <div className="chatwindow--name">Fulano de Tal</div>
+          <div className="chatwindow--name">{data.title}</div>
         </div>
 
         <div className="chatwindow--headerbuttons">
@@ -145,6 +135,7 @@ export default function ChatWindow({ user }) {
             placeholder="Digite sua mensagem..."
             value={text}
             onChange={(e) => setText(e.target.value)}
+            onKeyUp={handleInputKeyUp}
           />
         </div>
 
@@ -163,5 +154,13 @@ export default function ChatWindow({ user }) {
 }
 
 ChatWindow.propTypes = {
-  user: PropTypes.shape({}).isRequired,
+  user: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+  }).isRequired,
+  data: PropTypes.shape({
+    title: PropTypes.string.isRequired,
+    image: PropTypes.string.isRequired,
+    chatId: PropTypes.string.isRequired,
+  }),
+  setActiveChat: PropTypes.func.isRequired,
 };
